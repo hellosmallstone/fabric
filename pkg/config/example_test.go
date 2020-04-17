@@ -1075,6 +1075,50 @@ func ExampleConfigTx_UpdateApplicationMSP() {
 	}
 }
 
+func ExampleConfigTx_UpdateOrdererMSP() {
+	baseConfig := fetchChannelConfig()
+	c := config.New(baseConfig)
+
+	msp, err := c.OrdererMSP("OrdererOrg")
+	if err != nil {
+		panic(err)
+	}
+
+	newIntermediateCert := &x509.Certificate{
+		KeyUsage: x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
+		IsCA:     true,
+	}
+
+	msp.IntermediateCerts = append(msp.IntermediateCerts, newIntermediateCert)
+
+	err = c.UpdateOrdererMSP(msp, "OrdererOrg")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExampleConfigTx_UpdateConsortiumMsp() {
+	baseConfig := fetchSystemChannelConfig()
+	c := config.New(baseConfig)
+
+	msp, err := c.ConsortiumMSP("SampleConsortium", "Org1")
+	if err != nil {
+		panic(err)
+	}
+
+	newIntermediateCert := &x509.Certificate{
+		KeyUsage: x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
+		IsCA:     true,
+	}
+
+	msp.IntermediateCerts = append(msp.IntermediateCerts, newIntermediateCert)
+
+	err = c.UpdateConsortiumMsp(msp, "SampleConsortium", "Org1")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func ExampleConfigTx_RemoveApplicationCapability() {
 	baseConfig := fetchChannelConfig()
 	c := config.New(baseConfig)

@@ -2011,6 +2011,21 @@ func baseEtcdRaftOrderer(t *testing.T) Orderer {
 	return orderer
 }
 
+// baseOrdererChannelGroup creates a channel config group
+// that only contains an Orderer group.
+func baseOrdererChannelGroup(t *testing.T, ordererType string) (*cb.ConfigGroup, error) {
+	channelGroup := newConfigGroup()
+
+	ordererConf := baseOrdererOfType(t, ordererType)
+	ordererGroup, err := newOrdererGroup(ordererConf)
+	if err != nil {
+		return nil, err
+	}
+	channelGroup.Groups[OrdererGroupKey] = ordererGroup
+
+	return channelGroup, nil
+}
+
 // marshalOrPanic is a helper for proto marshal.
 func marshalOrPanic(pb proto.Message) []byte {
 	data, err := proto.Marshal(pb)

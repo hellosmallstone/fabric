@@ -249,3 +249,21 @@ func implicitMetaAnyPolicy(policyName string) (*standardConfigPolicy, error) {
 		value: implicitMetaPolicy,
 	}, nil
 }
+
+// getConsortiumOrg returns the organization config group for an org in the
+// provided config. It returns an error if a named consortium or an consortium org was not found
+// in the config with the specified name.
+func getConsortiumOrg(config *cb.Config, consortiumName string, orgName string) (*cb.ConfigGroup, error) {
+	consortiumGroup := config.ChannelGroup.Groups[ConsortiumsGroupKey].Groups
+	cg, ok := consortiumGroup[consortiumName]
+	if !ok {
+		return nil, fmt.Errorf("consortium %s does not exist in channel config", consortiumName)
+	}
+
+	org, ok := cg.Groups[orgName]
+	if !ok {
+		return nil, fmt.Errorf("org %s does not exist in channel config", orgName)
+	}
+
+	return org, nil
+}

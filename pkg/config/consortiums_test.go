@@ -964,3 +964,17 @@ func baseConsortiums(t *testing.T) []Consortium {
 		},
 	}
 }
+
+func baseConsortiumChannelGroup(t *testing.T) (*cb.ConfigGroup, error) {
+	channelGroup := newConfigGroup()
+
+	consortiums := baseConsortiums(t)
+	consortiumsGroup, err := newConsortiumsGroup(consortiums)
+	if err != nil {
+		return nil, err
+	}
+
+	channelGroup.Groups[ConsortiumsGroupKey] = consortiumsGroup
+
+	return channelGroup, nil
+}
